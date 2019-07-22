@@ -75,6 +75,7 @@ var displayNumber = 3;
 function Product() {
   this.imageURL = '../imgs/';
   this.name = '';
+  this.description = '';
   this.clicks = 0;
   this.views = 0;
   productObjects.push(this);
@@ -84,7 +85,8 @@ function createProducts() {
   for (var i = 0; i < products[0].length; i++) {
     new Product(products[[0][i]]);
     productObjects[i].imageURL += products[1][i];
-    productObjects[i].name = products[2][i];
+    productObjects[i].name = products[0][i];
+    productObjects[i].description = products[2][i];
   }
 }
 
@@ -103,30 +105,47 @@ function render() {
     for (var j = 0; j < i; j++) {
       while (randomProducts[j] === randomProducts[j + 1]) {
         randomProducts[j + 1] = randomProduct();
-      }  
+      }
       for (var k = 0; k < j; k++) {
         while (randomProducts[k] === randomProducts[k + 2]) {
-        randomProducts[k + 2] = randomProduct();
+          randomProducts[k + 2] = randomProduct();
         }
       }
     }
   }
-  
 
-console.table(productObjects);
-
-  for (var i = 0; i < displayNumber; i++) {
-    productObjects[randomProducts[i]].views++;
-    var img = document.createElement('img');
-    img.setAttribute('src', productObjects[randomProducts[i]].imageURL);
-    img.setAttribute('data-name', productObjects[randomProducts[i]].name);
-    // img.addEventListener('click', handleVote);
-    productsLocation.appendChild(img);
+  for (var l = 0; l < displayNumber; l++) {
+    productObjects[randomProducts[l]].views++;
+    var image = document.createElement('img');
+    image.setAttribute('src', productObjects[randomProducts[l]].imageURL);
+    image.setAttribute('data-name', productObjects[randomProducts[l]].name);
+    image.addEventListener('click', voting);
+    productsLocation.appendChild(image);
   }
+}
+
+function voting(event) {
+  var clickedProduct = event.target.dataset.name;
+  for (var i = 0; i < productObjects.length; i++) {
+    if (productObjects[i].name === clickedProduct) {
+      productObjects[i].clicks++;
+      totalClicks++;
+      render();
+    }
+  }
+  if(totalClicks === 25){
+    var images = document.getElementsByTagName('img');
+    for(var i = 0; i < images.length; i++){
+      images[i].removeEventListener('click', voting);
+    }
+    generateResults();
+  }
+}
+
+function generateResults() {
+
 }
 
 createProducts();
 
 render();
-
-

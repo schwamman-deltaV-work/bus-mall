@@ -147,7 +147,7 @@ function voting(event) {
       render();
     }
   }
-  if(totalClicks === 5){
+  if(totalClicks === 25){
     var images = document.getElementsByClassName('image');
     for(var i = 0; i < images.length; i++){
       images[i].removeEventListener('click', voting);

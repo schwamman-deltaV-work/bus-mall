@@ -74,7 +74,6 @@ var displayNumber = 3;
 
 function Product() {
   this.imageURL = '../imgs/';
-  this.imageClass = '';
   this.name = '';
   this.description = '';
   this.clicks = 0;
@@ -88,9 +87,21 @@ function createProducts() {
     productObjects[i].name = products[0][i];
     productObjects[i].imageURL += products[1][i];
     productObjects[i].description = products[2][i];
-    productObjects[i].imageClass = '.' + products[0][i];
   }
-  console.table(productObjects);
+}
+
+function calcPercentage(clicks, views) {
+  var percentage = clicks / views * 100;
+  if (isNaN(percentage)) {
+    percentage = '';
+  }
+  else if (percentage === Infinity) {
+    percentage = '';
+  }
+  else {
+    percentage = '(' + percentage + '%)';
+  }
+  return percentage;
 }
 
 function randomProduct() {
@@ -120,13 +131,10 @@ function render() {
   for (var i = 0; i < displayNumber; i++) {
     productObjects[randomProducts[i]].views++;
     var imageContainer = document.createElement('div');
-    imageContainer.setAttribute('class', 'image');
-    var image = document.createElement('img');
-    image.setAttribute('src', productObjects[randomProducts[i]].imageURL);
-    image.setAttribute('data-name', productObjects[randomProducts[i]].name);
-    image.addEventListener('click', voting);
-    imageContainer.appendChild(image);
-    productsLocation.appendChild(image);
+    imageContainer.setAttribute('class', 'image ' + productObjects[randomProducts[i]].name);
+    imageContainer.setAttribute('data-name', productObjects[randomProducts[i]].name);
+    imageContainer.addEventListener('click', voting);
+    productsLocation.appendChild(imageContainer);
   }
 }
 
@@ -139,8 +147,8 @@ function voting(event) {
       render();
     }
   }
-  if(totalClicks === 25){
-    var images = document.getElementsByTagName('img');
+  if(totalClicks === 5){
+    var images = document.getElementsByClassName('image');
     for(var i = 0; i < images.length; i++){
       images[i].removeEventListener('click', voting);
     }
@@ -153,7 +161,7 @@ function generateResults() {
   var resultsList = document.createElement('ul');
   for (var i = 0; i < productObjects.length; i++) {
     var productResults = document.createElement('li');
-    productResults.textContent = productObjects[i].description + ' received ' + productObjects[i].clicks + ' votes';
+    productResults.textContent = productObjects[i].description + ' : ' + productObjects[i].clicks + ' / ' + productObjects[i].views + ' ' + calcPercentage(productObjects[i].views, productObjects[i].clicks);
     resultsList.appendChild(productResults);
   }
   resultsLocation.appendChild(resultsList);
@@ -163,3 +171,5 @@ function generateResults() {
 createProducts();
 
 render();
+
+

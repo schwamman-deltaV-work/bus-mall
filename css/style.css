@@ -1,10 +1,33 @@
-img {
-    width: 33%;
+body {
+    background-color: #fea49f;
+}
+aside {
+    box-sizing: border-box;
+    float: left;
+    width: 25%;
+    height: auto;
+    padding: 25px;
+    margin: 10px;
+    background-color: #101357;
+    color: #f5f2d0;
+    line-height: 1.4rem;
+
+
 }
 
 #products {
-    width: 80%;
-    margin: auto;
+    width: 73%;
+    height: 400px;
+    float: right;
 }
 
-.image
+.image {
+    width: 33%;
+    height: 333px;
+    box-sizing: border-box;
+    border: 15px solid #fea49f;
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+

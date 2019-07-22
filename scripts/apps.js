@@ -66,7 +66,7 @@ var products = [
     'USB Tentacle',
     'Watering Can',
     'Wine Glass'
-  ]
+  ],
 ];
 var productObjects = [];
 var totalClicks = 0;
@@ -74,6 +74,7 @@ var displayNumber = 3;
 
 function Product() {
   this.imageURL = '../imgs/';
+  this.imageClass = '';
   this.name = '';
   this.description = '';
   this.clicks = 0;
@@ -84,10 +85,12 @@ function Product() {
 function createProducts() {
   for (var i = 0; i < products[0].length; i++) {
     new Product(products[[0][i]]);
-    productObjects[i].imageURL += products[1][i];
     productObjects[i].name = products[0][i];
+    productObjects[i].imageURL += products[1][i];
     productObjects[i].description = products[2][i];
+    productObjects[i].imageClass = '.' + products[0][i];
   }
+  console.table(productObjects);
 }
 
 function randomProduct() {
@@ -114,12 +117,15 @@ function render() {
     }
   }
 
-  for (var l = 0; l < displayNumber; l++) {
-    productObjects[randomProducts[l]].views++;
+  for (var i = 0; i < displayNumber; i++) {
+    productObjects[randomProducts[i]].views++;
+    var imageContainer = document.createElement('div');
+    imageContainer.setAttribute('class', 'image');
     var image = document.createElement('img');
-    image.setAttribute('src', productObjects[randomProducts[l]].imageURL);
-    image.setAttribute('data-name', productObjects[randomProducts[l]].name);
+    image.setAttribute('src', productObjects[randomProducts[i]].imageURL);
+    image.setAttribute('data-name', productObjects[randomProducts[i]].name);
     image.addEventListener('click', voting);
+    imageContainer.appendChild(image);
     productsLocation.appendChild(image);
   }
 }
@@ -143,6 +149,14 @@ function voting(event) {
 }
 
 function generateResults() {
+  var resultsLocation = document.getElementById('results');
+  var resultsList = document.createElement('ul');
+  for (var i = 0; i < productObjects.length; i++) {
+    var productResults = document.createElement('li');
+    productResults.textContent = productObjects[i].description + ' received ' + productObjects[i].clicks + ' votes';
+    resultsList.appendChild(productResults);
+  }
+  resultsLocation.appendChild(resultsList);
 
 }
 

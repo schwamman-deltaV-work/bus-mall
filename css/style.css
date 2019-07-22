@@ -1,3 +1,10 @@
 img {
     width: 33%;
 }
+
+#products {
+    width: 80%;
+    margin: auto;
+}
+
+.image

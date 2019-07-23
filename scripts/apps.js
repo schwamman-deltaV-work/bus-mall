@@ -71,6 +71,7 @@ var products = [
 var productObjects = [];
 var totalClicks = 0;
 var displayNumber = 3;
+var lastShown = [];
 
 function Product() {
   this.imageURL = '../imgs/';
@@ -91,7 +92,7 @@ function createProducts() {
 }
 
 function calcPercentage(clicks, views) {
-  var percentage = clicks / views * 100;
+  var percentage = Math.round(views / clicks * 100);
   if (isNaN(percentage)) {
     percentage = '';
   }
@@ -113,20 +114,20 @@ function render() {
   productsLocation.innerHTML = '';
 
   var randomProducts = [];
-  randomProducts.push(randomProduct());
-  for (var i = 1; i < displayNumber; i++) {
-    randomProducts.push(randomProduct());
-    for (var j = 0; j < i; j++) {
-      while (randomProducts[j] === randomProducts[j + 1]) {
-        randomProducts[j + 1] = randomProduct();
-      }
-      for (var k = 0; k < j; k++) {
-        while (randomProducts[k] === randomProducts[k + 2]) {
-          randomProducts[k + 2] = randomProduct();
-        }
-      }
-    }
+
+  if (displayNumber >= productObjects.length / 2) {
+    displayNumber = productObjects.length / 2;
   }
+  for (var i = 0; i < displayNumber; i++) {
+    var product = randomProduct();
+    while (randomProducts.includes(product) || lastShown.includes(product)) {
+      product = randomProduct();
+    }
+    randomProducts.push(product);
+    
+  }
+
+  lastShown = randomProducts;
 
   for (var i = 0; i < displayNumber; i++) {
     productObjects[randomProducts[i]].views++;

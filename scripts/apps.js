@@ -154,6 +154,7 @@ function voting(event) {
       images[i].removeEventListener('click', voting);
     }
     generateResults();
+    generateGraph();    
   }
 }
 
@@ -167,6 +168,88 @@ function generateResults() {
   }
   resultsLocation.appendChild(resultsList);
 
+}
+
+function generateGraph() {
+  var graphLocation = document.getElementById('products');
+  for (var j = 0; j < displayNumber; j++) {
+    graphLocation.removeChild(graphLocation.childNodes[0]);
+  }
+  var graph = document.createElement('canvas');
+  graph.setAttribute('id', 'myChart');
+  graphLocation.appendChild(graph);
+
+  //Creates arrays of voting results
+  var votesArray = [];
+  for (var i = 0; i < productObjects.length; i++) {
+    votesArray.push(productObjects[i].clicks);
+  }
+  var percentageArray = [];
+  for (var i = 0; i < productObjects.length; i++) {
+    var percent = Math.round( productObjects[i].clicks / productObjects[i].views * 100);
+    percentageArray.push(percent);
+  }
+
+  var ctx = document.getElementById('myChart').getContext('2d');
+  Chart.defaults.global.defaultFontSize = 16;
+  var chart = new Chart(ctx, {
+    type: 'bar',
+
+    data: {
+      labels: products[2],
+      datasets: [{
+        label: 'Vote Totals',
+        backgroundColor: '#101357',
+        hoverBackgroundColor: 'hsla(237, 69%, 20%, 0.53)',
+        data: votesArray,
+        yAxisID: 'A',
+      },
+      {
+        label: 'Votes / Views %',
+        backgroundColor: "#226917",
+        yAxisID: 'B',
+        hoverBackgroundColor: 'hsla(112, 64%, 25%, 0.53)',
+        data: percentageArray,
+      }]
+    },
+
+    options: {
+      layout: {
+        padding: {
+          left: 25,
+          right: 50,
+          top: 100,
+          bottom: 0
+        }
+      },
+      scales: {
+        yAxes: [{
+          id: 'A',
+          type: 'linear',
+          position: 'left',
+          ticks: {
+            max: 10,
+            min: 0,
+            stepSize: 1,
+            fontSize: 16,
+          },
+          
+        },
+        { id: 'B',
+          type: 'linear',
+          position: 'right',
+          ticks: {
+            max: 100,
+            min: 0,
+            fontSize: 16,
+            callback: function(value, index, values) {
+              return value + '%';
+            },
+          },
+        }],
+      },
+    },
+  });
 }
 
 createProducts();

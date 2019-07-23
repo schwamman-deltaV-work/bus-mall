@@ -53,6 +53,11 @@ aside h2 {
     text-indent: 25px;
 }
 
+/* #myChart {
+    padding: 100px 50px 50px 25px;
+    box-sizing: border-box;
+} */
+
 .image {
     width: 30%;
     height: 333px;

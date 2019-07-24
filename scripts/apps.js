@@ -72,6 +72,8 @@ var productObjects = [];
 var totalClicks = 0;
 var displayNumber = 3;
 var lastShown = [];
+var votesArray = [];
+var viewsArray = [];
 
 function Product() {
   this.imageURL = '../imgs/';
@@ -154,7 +156,8 @@ function voting(event) {
       images[i].removeEventListener('click', voting);
     }
     generateResults();
-    generateGraph();    
+    generateGraph();
+    saveData();
   }
 }
 
@@ -163,7 +166,7 @@ function generateResults() {
   var resultsList = document.createElement('ul');
   for (var i = 0; i < productObjects.length; i++) {
     var productResults = document.createElement('li');
-    productResults.textContent = productObjects[i].description + ' : ' + productObjects[i].clicks + ' / ' + productObjects[i].views + ' ' + calcPercentage(productObjects[i].views, productObjects[i].clicks);
+    productResults.textContent = productObjects[i].description + ' : ' + (productObjects[i].clicks + votesArray[i]) + ' / ' + (productObjects[i].views + viewsArray[i]) + ' ' + calcPercentage((productObjects[i].views + viewsArray[i]), (productObjects[i].clicks + votesArray[i]));
     resultsList.appendChild(productResults);
   }
   resultsLocation.appendChild(resultsList);
@@ -179,14 +182,14 @@ function generateGraph() {
   graph.setAttribute('id', 'myChart');
   graphLocation.appendChild(graph);
 
-  //Creates arrays of voting results
-  var votesArray = [];
   for (var i = 0; i < productObjects.length; i++) {
-    votesArray.push(productObjects[i].clicks);
+    votesArray[i] = productObjects[i].clicks + parseInt(votesArray);
+    viewsArray[i] = productObjects[i].views + parseInt(viewsArray);
   }
+
   var percentageArray = [];
   for (var i = 0; i < productObjects.length; i++) {
-    var percent = Math.round( productObjects[i].clicks / productObjects[i].views * 100);
+    var percent = Math.round(votesArray[i] / viewsArray[i] * 100);
     percentageArray.push(percent);
   }
 
@@ -206,7 +209,7 @@ function generateGraph() {
       },
       {
         label: 'Votes / Views %',
-        backgroundColor: "#226917",
+        backgroundColor: '#226917',
         yAxisID: 'B',
         hoverBackgroundColor: 'hsla(112, 64%, 25%, 0.53)',
         data: percentageArray,
@@ -252,8 +255,37 @@ function generateGraph() {
   });
 }
 
+function loadData() {
+  if (localStorage.getItem("votes") === null) {
+    console.log('In if statement')
+    createStorageArrays();
+    localStorage.setItem('votes', JSON.stringify(votesArray));
+    localStorage.setItem('views', JSON.stringify(viewsArray));
+  }
+  votesArray = JSON.parse(localStorage.getItem('votes'));
+  viewsArray = JSON.parse(localStorage.getItem('views'));
+}
+
+function saveData() {
+  localStorage.setItem('votes', JSON.stringify(votesArray));
+  localStorage.setItem('views', JSON.stringify(viewsArray));
+}
+
+function createStorageArrays() {
+  for (var i = 0; i < productObjects.length; i++) {
+    votesArray.push(0);
+  }
+  for (var i = 0; i < productObjects.length; i++) {
+    viewsArray.push(0);
+  }
+}
+
 createProducts();
+loadData();
 
 render();
+
+
+console.log(localStorage);
 
 

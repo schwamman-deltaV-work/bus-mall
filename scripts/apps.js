@@ -183,8 +183,8 @@ function generateGraph() {
   graphLocation.appendChild(graph);
 
   for (var i = 0; i < productObjects.length; i++) {
-    votesArray[i] = productObjects[i].clicks + parseInt(votesArray);
-    viewsArray[i] = productObjects[i].views + parseInt(viewsArray);
+    votesArray[i] = productObjects[i].clicks + parseInt(votesArray[i]);
+    viewsArray[i] = productObjects[i].views + parseInt(viewsArray[i]);
   }
 
   var percentageArray = [];
@@ -257,7 +257,6 @@ function generateGraph() {
 
 function loadData() {
   if (localStorage.getItem("votes") === null) {
-    console.log('In if statement')
     createStorageArrays();
     localStorage.setItem('votes', JSON.stringify(votesArray));
     localStorage.setItem('views', JSON.stringify(viewsArray));
